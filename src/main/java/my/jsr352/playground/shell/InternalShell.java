@@ -15,15 +15,25 @@
  */
 package my.jsr352.playground.shell;
 
+import javax.batch.operations.JobOperator;
+import javax.batch.runtime.BatchRuntime;
 import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 
 /**
  *
  * @author skrymets
  */
 @ShellComponent
-public class Shell {
-
+public class InternalShell {
+    
+    @ShellMethod("Stops an execution by it's id.")
+    public void stopJob(@ShellOption long executionId) {
+        JobOperator jobOp = BatchRuntime.getJobOperator();
+        jobOp.stop(executionId);
+    }
+    
     /**
      * @ShellMethodAvailability("methodAviability")
      * public void command1() {

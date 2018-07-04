@@ -13,32 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package my.jsr352.playground.jobs;
+package my.jsr352.playground;
 
-import javax.batch.api.AbstractBatchlet;
-import javax.batch.api.BatchProperty;
-import javax.inject.Inject;
-import javax.inject.Named;
+import java.util.Properties;
+import javax.annotation.PostConstruct;
+import javax.batch.operations.JobOperator;
+import javax.batch.runtime.BatchRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author skrymets
  */
-@Named
-public class MyBatchlet extends AbstractBatchlet {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MyBatchlet.class);
-
-    @Inject
-    @BatchProperty(name = "userProperty")
-    private String userProperty;
-
-    @Override
-    public String process() throws Exception {
-        LOG.info("The processing is tarted by {} with {}", MyBatchlet.class.getName(), userProperty);
-        return "";
+@Component
+public class Starter {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(Starter.class);
+    
+    @PostConstruct
+    public void init() {
+        
+        JobOperator jobOp = BatchRuntime.getJobOperator();
+        Properties jobParameters = new Properties();
+        
+        long executionId = jobOp.start("dummyJob", jobParameters);
+        
+        LOG.info("A new job was executed wit id: {}", executionId);
+        
     }
-
+        
 }
